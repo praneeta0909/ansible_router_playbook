@@ -1,0 +1,41 @@
+---
+- name: Provision an EC2 node
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: provisioning
+  vars:
+      instance_type: m1.small
+      security_group: manju1-sg
+      image: ami-d4de16b7
+      region: ap-southeast-1
+      keypair: CiscoASR
+      subnet_id: subnet-14a86d70
+      count: 1
+      contents: "{{ lookup('file', 'vyatta.txt') }}"
+  tasks:
+      - name: Launch new Instance
+        ec2:
+           instance_tags="Name=Brocade_US"
+           instance_type={{ instance_type}}
+           image={{ image }}
+           group={{ security_group }}
+           vpc_subnet_id={{ subnet_id }}
+           wait=true
+           region={{ region }}
+           keypair={{ keypair }}
+           count={{ count }}
+        register: ec2
+
+      - name: Add all instance public IPs to host group
+        add_host: hostname={{ item.public_ip }} groups=brocade1
+        with_items: ec2.instances
+      - name: wait_one
+        local_action: wait_for port=22 delay=60 host={{ item.public_dns_name }}
+        with_items: ec2.instances
+
+- hosts: brocade1
+  user: vyatta
+  gather_facts: no
+  roles:
+  - vyos
