@@ -1,0 +1,10 @@
+---
+    - name: wait_one
+      local_action: wait_for port=22 delay=100
+      ignore_errors: True
+    - pause: minutes=1
+    - name: Test that my module works
+      rl_brocade: cmd="{{contents}}" ip_add={{ inventory_hostname }} key_file="/root/.ssh/CiscoASR.pem"
+      register: result
+      delegate_to: 127.0.0.1
+

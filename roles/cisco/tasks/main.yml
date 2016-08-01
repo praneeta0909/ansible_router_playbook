@@ -1,0 +1,11 @@
+---
+    - name: wait_one
+      local_action: wait_for port=22 delay=100
+      ignore_errors: True
+    - pause: minutes=2
+    - name: Test that my module works
+      rl_iot: cmd="access-list 101 permit {{item.value}} 10.1.0.0 0.255.255.255 any"  ip_add={{ inventory_hostname }} device_type="cisco_ios" key_file="/root/.ssh/CiscoASR.pem" username="ec2-user"
+      with_items: access
+      register: result
+      delegate_to: 127.0.0.1
+

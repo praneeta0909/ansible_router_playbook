@@ -1,0 +1,17 @@
+---
+    - name: wait_one
+      local_action: wait_for port=22 delay=100
+      ignore_errors: True
+    - pause: minutes=1
+    - name: Test that my module works
+      rl_brocade: cmd="{{contents}}" ip_add={{ inventory_hostname }} key_file="/root/.ssh/CiscoASR.pem"
+      register: result
+      delegate_to: 127.0.0.1
+    - name: SET Loopback INTERFACE
+      rl_brocade: cmd="set interfaces loopback lo address 132.0.0.1/32"  ip_add={{ inventory_hostname }}  key_file="/root/.ssh/CiscoASR.pem" username="vyatta"
+      register: result
+      delegate_to: 127.0.0.1
+    - name: SET STATIC ROUTE
+      rl_brocade: cmd="set protocols static route 14.0.0.0/8 next-hop 172.16.0.26"  ip_add={{ inventory_hostname }}  key_file="/root/.ssh/CiscoASR.pem" username="vyatta"
+      register: result
+      delegate_to: 127.0.0.1

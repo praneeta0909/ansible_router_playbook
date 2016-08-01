@@ -1,0 +1,3 @@
+{% for loopback in vyatta_loopback %}
+set interface loopback lo address {{loopback.address}}
+{% endfor %}

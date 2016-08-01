@@ -1,0 +1,8 @@
+- name: copy the script
+  copy:
+   src: /etc/ansible/utilization.sh
+   dest: /root/
+   mode: 0755
+- cron: name="start script" minute="*/5" job="./utilization.sh >> output.csv"
+- shell: netstat -tunlp | grep -i LISTEN >> listen.csv
+

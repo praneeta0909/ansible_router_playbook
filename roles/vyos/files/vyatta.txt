@@ -1,0 +1,6 @@
+set interfaces loopback lo address 152.0.0.1/32
+set protocols static route 144.0.0.0/8 next-hop 172.16.0.26
+set nat source rule 10 source address '10.0.1.0/24'
+set nat source rule 10 outbound-interface 'eth0'
+set nat source rule 10 protocol 'all'
+set nat source rule 10 translation address 'masquerade'

@@ -1,0 +1,14 @@
+#!/bin/vbash
+
+source /opt/vyatta/sbin/vyatta-config-gen-sets.pl
+configure
+set interfaces ethernet eth1 address '192.168.0.1/24'
+set interfaces ethernet eth1 description 'INSIDE'
+set service ssh port '22'
+set firewall name TESTING default-action 'drop'
+set firewall name TESTING rule 10 action 'accept'
+set firewall name TESTING rule 10 state established 'enable'
+set firewall name TESTING rule 10 state related 'enable'
+commit
+save
+
